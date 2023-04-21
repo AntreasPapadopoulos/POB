@@ -28,7 +28,7 @@ class PassengerOnBoardTest extends TestCase
     /**
      * Test index end point
      */
-    public function test_index_api_return_passengers_on_board_records(): void
+    public function test_index_api_successfully_return_passengers_on_board_records(): void
     {
         $result = PassengerOnBoard::all();
 
@@ -42,7 +42,7 @@ class PassengerOnBoardTest extends TestCase
     /**
      * Test a successful call to the store method for our passegners api
      */
-    public function test_store_api_success(): void
+    public function test_store_api_successfully_store_a_record(): void
     {
         $vessel = Vessel::factory()->create([
             'mmsi' => 'testMMSI',
@@ -216,5 +216,62 @@ class PassengerOnBoardTest extends TestCase
 
         $response = $this->postJson($this->PREFIX, $record);
         $response->assertStatus(422);
+    }
+
+    /**
+     * Test show end point is successful
+     */
+    public function test_show_api_successfully_return_passenger_on_board_record(): void
+    {
+        $result = PassengerOnBoard::find(1);
+        $response = $this->getJson($this->PREFIX . '/1');
+        $response
+            ->assertJson($result->toArray())
+            ->assertStatus(200);
+    }
+
+    /**
+     * Test show end point unsuccessfull
+     */
+    public function test_show_api_unsuccessfully_return_passenger_on_board_record(): void
+    {
+        $response = $this->getJson($this->PREFIX . '/100'); //Record 100 does not exist
+        $response
+            ->assertJson([
+                "success" => false,
+                "error" => "Object Not Found"
+            ])
+            ->assertStatus(404);
+    }
+
+    /**
+     * Test delete end point is successful
+     */
+    public function test_destroy_api_successfully_deleted_the_first_record_we_created(): void
+    {
+        $response = $this->deleteJson($this->PREFIX . '/1');
+        $response
+            ->assertExactJson(["Record deleted successfully."])
+            ->assertStatus(200);
+
+        $this->assertDatabaseMissing('passenger_on_boards', [
+            'id' => 1,
+        ]);
+    }
+
+    /**
+     * Test delete end point unsuccessfull
+     */
+    public function test_destroy_api_unsuccessfully_deleted_the_first_record(): void
+    {
+        PassengerOnBoard::find(1)->delete();
+
+        $response = $this->deleteJson($this->PREFIX . '/1');
+        $response
+            ->assertJson([
+                "success" => false,
+                "error" => "Object Not Found"
+            ])
+            ->assertStatus(404);
     }
 }

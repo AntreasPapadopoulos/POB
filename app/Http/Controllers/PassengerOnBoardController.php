@@ -57,7 +57,7 @@ class PassengerOnBoardController extends Controller
     public function destroy(PassengerOnBoard $pob)
     {
         if ($pob->delete()) {
-            return response()->success('Record deleted.');
+            return response()->json('Record deleted successfully.', 200);   
         }
     }
 }
