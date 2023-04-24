@@ -18,7 +18,7 @@ class VesselFactory extends Factory
     {
         return [
             'name' => fake()->unique()->company(),
-            'mmsi' => fake()->regexify('[A-Z]{5}[0-4]{3}')
+            'mmsi' => fake()->unique()->regexify('MID[0-9]{6}')
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Vessel;
+use App\Rules\Mmsi;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StorePassengerOnBoardRequest extends FormRequest
@@ -23,11 +24,10 @@ class StorePassengerOnBoardRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'submittedBy' => ['required'],
-            'authentication' => ['required'],
-            'mmsi' => ['required', 'exists:vessels'], //Must already exist in the database
+            'authentication' => ['required', 'string'],
+            'mmsi' => ['required', 'string', new Mmsi , 'exists:vessels'], //Must already exist in the database
             'passengerNumber' => ['required', 'integer', 'numeric', 'gt:0'], //Must be a number and greater than 0
-            'reportTime' => ['required',  'date', 'after:yesterday', 'before:tomorrow'], //Can only submit for today, must be a date
+            'reportTime' => ['required', 'date', 'after:yesterday', 'before:tomorrow'], //Can only submit for today, must be a date
         ];
     }
 
@@ -39,8 +39,6 @@ class StorePassengerOnBoardRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'submittedBy.required' => 'The id of the person who submitted this is required',
-
             'authentication.required' => 'The token is required',
 
             'mmsi.required' => 'The vessel identifier is required',
@@ -70,7 +68,7 @@ class StorePassengerOnBoardRequest extends FormRequest
         //Re-format our validated form data to suitable database format 
         $this->replace(
             [
-                'user_id' => 1,
+                'user_id' => 1, //ToDo: Needs to change based on authentication (to be confirmed by Mike)
                 'vessel_id' => $vessel->id,
                 'operator_id' => $vessel->operator_id,
                 'no_of_passengers' => $this->passengerNumber

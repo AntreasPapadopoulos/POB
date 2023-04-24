@@ -45,7 +45,7 @@ class PassengerOnBoardTest extends TestCase
     public function test_store_api_success(): void
     {
         $vessel = Vessel::factory()->create([
-            'mmsi' => 'testMMSI',
+            'mmsi' => 'MID123456',
             'operator_id' => 1
         ]);
 
