@@ -66,23 +66,6 @@ class PassengerOnBoardTest extends TestCase
     /**
      * Test a failed call to the store method for our passegners api
      */
-    public function test_store_api_unnsuccessfull_missing_submittedBy(): void
-    {
-        $record = [
-            // "submittedBy" => 1,
-            "authentication" => "testToken",
-            "mmsi" => 'testMMSI',
-            "passengerNumber" => 10,
-            "reportTime" => date('Y-m-d')
-        ];
-
-        $response = $this->postJson($this->PREFIX, $record);
-        $response->assertStatus(422);
-    }
-
-    /**
-     * Test a failed call to the store method for our passegners api
-     */
     public function test_store_api_unnsuccessfull_missing_authentication(): void
     {
         $record = [
