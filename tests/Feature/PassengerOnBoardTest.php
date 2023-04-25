@@ -3,14 +3,9 @@
 namespace Tests\Feature;
 
 use App\Models\PassengerOnBoard;
-use App\Models\UserGroup;
-use App\Models\Operator;
 use App\Models\Vessel;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use Artisan;
 
 class PassengerOnBoardTest extends TestCase
 {
